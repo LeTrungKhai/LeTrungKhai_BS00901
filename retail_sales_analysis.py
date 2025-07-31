@@ -3,94 +3,86 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
-import numpy as np
 
-# Read data
+# Load data
 df = pd.read_csv("Retail and wherehouse Sale.csv")
 
+st.title("📊 Retail & Warehouse Sales Dashboard")
+
 # --- Chart 1: Total retail sales by product type ---
+st.subheader("1. Total retail sales by product type")
 retail_sales_by_type = df.groupby("ITEM TYPE")["RETAIL SALES"].sum().sort_values(ascending=False)
-plt.figure(figsize=(10, 6))
-retail_sales_by_type.plot(kind='bar', color='skyblue', edgecolor='black')
-plt.title("Total retail sales by product type", fontsize=14)
-plt.xlabel("Product Type", fontsize=12)
-plt.ylabel("Retail sales", fontsize=12)
-plt.xticks(rotation=45)
-plt.grid(axis='y', linestyle='--', alpha=0.7)
-plt.tight_layout()
+fig1, ax1 = plt.subplots(figsize=(10, 6))
+retail_sales_by_type.plot(kind='bar', ax=ax1, color='skyblue', edgecolor='black')
+ax1.set_title("Total retail sales by product type")
+ax1.set_xlabel("Product Type")
+ax1.set_ylabel("Retail Sales")
+ax1.tick_params(axis='x', rotation=45)
+ax1.grid(axis='y', linestyle='--', alpha=0.7)
 st.pyplot(fig1)
 
 # --- Chart 2: Monthly retail sales trend ---
+st.subheader("2. Monthly retail sales trend")
 monthly_sales = df.groupby('MONTH')['RETAIL SALES'].sum().sort_index()
-plt.figure(figsize=(10, 6))
-plt.plot(monthly_sales.index, monthly_sales.values, marker='o', color='green')
-plt.title('Monthly Retail Sales Trend')
-plt.xlabel('Month')
-plt.ylabel('Retail Sales')
-plt.xticks(monthly_sales.index)
-plt.grid(True)
-plt.tight_layout()
+fig2, ax2 = plt.subplots(figsize=(10, 6))
+ax2.plot(monthly_sales.index, monthly_sales.values, marker='o', color='green')
+ax2.set_title("Monthly Retail Sales Trend")
+ax2.set_xlabel("Month")
+ax2.set_ylabel("Retail Sales")
+ax2.grid(True)
 st.pyplot(fig2)
 
-# --- Chart 3: Compare Retail and Warehouse Channel Revenues by Month ---
+# --- Chart 3: Retail vs Warehouse Revenue by Month ---
+st.subheader("3. Compare Retail and Warehouse Channel Revenues by Month")
 monthly_sales_dual = df.groupby('MONTH')[['RETAIL SALES', 'WAREHOUSE SALES']].sum().sort_index()
 months = monthly_sales_dual.index
 bar_width = 0.4
 x = range(len(months))
-plt.figure(figsize=(10, 6))
-plt.bar([i - bar_width/2 for i in x], monthly_sales_dual['RETAIL SALES'], width=bar_width, label='Retail Sales')
-plt.bar([i + bar_width/2 for i in x], monthly_sales_dual['WAREHOUSE SALES'], width=bar_width, label='Warehouse Sales')
-plt.xlabel('Month')
-plt.ylabel('Total Revenue')
-plt.title('Monthly Retail vs Warehouse Sales')
-plt.xticks(x, months)
-plt.legend()
-plt.grid(True, axis='y')
-plt.tight_layout()
+fig3, ax3 = plt.subplots(figsize=(10, 6))
+ax3.bar([i - bar_width/2 for i in x], monthly_sales_dual['RETAIL SALES'], width=bar_width, label='Retail Sales')
+ax3.bar([i + bar_width/2 for i in x], monthly_sales_dual['WAREHOUSE SALES'], width=bar_width, label='Warehouse Sales')
+ax3.set_xlabel("Month")
+ax3.set_ylabel("Total Revenue")
+ax3.set_title("Monthly Retail vs Warehouse Sales")
+ax3.set_xticks(list(x))
+ax3.set_xticklabels(months)
+ax3.legend()
+ax3.grid(True, axis='y')
 st.pyplot(fig3)
 
 # --- Chart 4: Revenue Share by Product Type ---
+st.subheader("4. Revenue Share by Product Type")
 df.dropna(inplace=True)
 df.drop_duplicates(inplace=True)
 df['Total Revenue'] = df['RETAIL SALES'] + df['WAREHOUSE SALES']
 df = df[df['Total Revenue'] > 0]
 type_sales = df.groupby('ITEM TYPE')['Total Revenue'].sum()
-type_sales = type_sales[type_sales > 0]
-plt.figure(figsize=(10, 8))
-patches, texts = plt.pie(
+fig4, ax4 = plt.subplots(figsize=(10, 8))
+patches, texts, autotexts = ax4.pie(
     type_sales,
-    labels=None,
-    autopct=None,
+    labels=type_sales.index,
+    autopct='%1.1f%%',
     startangle=140,
     colors=plt.cm.Paired.colors
 )
-plt.legend(
-    patches,
-    type_sales.index,
-    title="Product Type",
-    bbox_to_anchor=(1.05, 1),
-    loc="upper left",
-    borderaxespad=0.
-)
-plt.title('Revenue Share by Product Type')
-plt.axis('equal')
-plt.tight_layout()
+ax4.axis('equal')
+ax4.set_title("Revenue Share by Product Type")
 st.pyplot(fig4)
 
-# --- Chart 5: Actual and Predicted Retail Sales ---
+# --- Chart 5: Actual vs Predicted Retail Sales ---
+st.subheader("5. Actual vs Predicted Retail Sales")
 X = df[['WAREHOUSE SALES']]
 y = df['RETAIL SALES']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 model = LinearRegression()
 model.fit(X_train, y_train)
 y_pred = model.predict(X_test)
-plt.figure(figsize=(10, 6))
-plt.plot(range(len(y_test)), y_test.values, label='Actual', marker='o')
-plt.plot(range(len(y_pred)), y_pred, label='Predicted', marker='x')
-plt.title('Actual vs Predicted Retail Sales')
-plt.xlabel('Test Sample Index')
-plt.ylabel('Retail Sales')
-plt.legend()
-plt.grid(True)
-plt.tight_layout()
+fig5, ax5 = plt.subplots(figsize=(10, 6))
+ax5.plot(range(len(y_test)), y_test.values, label='Actual', marker='o')
+ax5.plot(range(len(y_pred)), y_pred, label='Predicted', marker='x')
+ax5.set_title('Actual vs Predicted Retail Sales')
+ax5.set_xlabel('Test Sample Index')
+ax5.set_ylabel('Retail Sales')
+ax5.legend()
+ax5.grid(True)
 st.pyplot(fig5)
