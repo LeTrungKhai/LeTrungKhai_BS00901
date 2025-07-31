@@ -17,7 +17,7 @@ plt.ylabel("Retail sales", fontsize=12)
 plt.xticks(rotation=45)
 plt.grid(axis='y', linestyle='--', alpha=0.7)
 plt.tight_layout()
-plt.show()
+st.pyplot(fig1)
 
 # --- Chart 2: Monthly retail sales trend ---
 monthly_sales = df.groupby('MONTH')['RETAIL SALES'].sum().sort_index()
@@ -29,7 +29,7 @@ plt.ylabel('Retail Sales')
 plt.xticks(monthly_sales.index)
 plt.grid(True)
 plt.tight_layout()
-plt.show()
+st.pyplot(fig1)
 
 # --- Chart 3: Compare Retail and Warehouse Channel Revenues by Month ---
 monthly_sales_dual = df.groupby('MONTH')[['RETAIL SALES', 'WAREHOUSE SALES']].sum().sort_index()
@@ -46,7 +46,7 @@ plt.xticks(x, months)
 plt.legend()
 plt.grid(True, axis='y')
 plt.tight_layout()
-plt.show()
+st.pyplot(fig1)
 
 # --- Chart 4: Revenue Share by Product Type ---
 df.dropna(inplace=True)
@@ -74,7 +74,7 @@ plt.legend(
 plt.title('Revenue Share by Product Type')
 plt.axis('equal')
 plt.tight_layout()
-plt.show()
+st.pyplot(fig1)
 
 # --- Chart 5: Actual and Predicted Retail Sales ---
 X = df[['WAREHOUSE SALES']]
@@ -92,4 +92,4 @@ plt.ylabel('Retail Sales')
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
-plt.show()
+st.pyplot(fig1)
