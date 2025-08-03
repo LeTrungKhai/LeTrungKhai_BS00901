@@ -69,7 +69,24 @@ ax4.axis('equal')
 ax4.set_title("Revenue Share by Product Type")
 st.pyplot(fig4)
 
-# --- Chart 5: Train Model ---
+# --- Chart 5: Correlation Matrix between indicators ---
+st.subheader("5. Correlation Matrix between Indicators")
+corr_df = df[['RETAIL SALES', 'WAREHOUSE SALES', 'RETAIL TRANSFERS', 'Total Revenue']]
+corr_matrix = corr_df.corr()
+fig5, ax5 = plt.subplots(figsize=(10, 8))
+sns.heatmap(
+    corr_matrix,
+    annot=True,
+    cmap='YlGnBu',
+    fmt=".2f",
+    linewidths=0.5,
+    ax=ax5
+)
+ax5.set_title('Correlation Matrix between Sales Indicators')
+st.pyplot(fig5)
+
+
+# --- Chart 6: Train Model ---
 st.subheader("5. Actual vs Predicted Retail Sales")
 X = df[['WAREHOUSE SALES']]
 y = df['RETAIL SALES']
@@ -85,4 +102,4 @@ ax5.set_xlabel('Test Sample Index')
 ax5.set_ylabel('Retail Sales')
 ax5.legend()
 ax5.grid(True)
-st.pyplot(fig5)
+st.pyplot(fig6)
