@@ -69,7 +69,7 @@ ax4.axis('equal')
 ax4.set_title("Revenue Share by Product Type")
 st.pyplot(fig4)
 
-# --- Chart 5: Actual vs Predicted Retail Sales ---
+# --- Chart 5: Train Model ---
 st.subheader("5. Actual vs Predicted Retail Sales")
 X = df[['WAREHOUSE SALES']]
 y = df['RETAIL SALES']
