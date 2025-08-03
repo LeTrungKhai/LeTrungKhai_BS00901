@@ -87,20 +87,22 @@ ax5.set_title('Correlation Matrix between Sales Indicators')
 st.pyplot(fig5)
 
 
-# --- Chart 6: Train Model ---
-st.subheader("5. Actual vs Predicted Retail Sales")
+# --- Chart 6: Actual vs Predicted Retail Sales ---
+st.subheader("6. Actual vs Predicted Retail Sales")
 X = df[['WAREHOUSE SALES']]
 y = df['RETAIL SALES']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 model = LinearRegression()
 model.fit(X_train, y_train)
 y_pred = model.predict(X_test)
-fig5, ax5 = plt.subplots(figsize=(10, 6))
-ax5.plot(range(len(y_test)), y_test.values, label='Actual', marker='o')
-ax5.plot(range(len(y_pred)), y_pred, label='Predicted', marker='x')
-ax5.set_title('Actual vs Predicted Retail Sales')
-ax5.set_xlabel('Test Sample Index')
-ax5.set_ylabel('Retail Sales')
-ax5.legend()
-ax5.grid(True)
+fig6, ax6 = plt.subplots(figsize=(10, 6))
+ax6.plot(range(len(y_test)), y_test.values, label='Actual', marker='o')
+ax6.plot(range(len(y_pred)), y_pred, label='Predicted', marker='x')
+ax6.set_title('Actual vs Predicted Retail Sales')
+ax6.set_xlabel('Test Sample Index')
+ax6.set_ylabel('Retail Sales')
+ax6.legend()
+ax6.grid(True)
 st.pyplot(fig6)
+
+
